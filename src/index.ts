@@ -1,8 +1,8 @@
 import { Hono } from "hono"
+import { handle } from "hono/vercel"
 import { invoiceRoute } from "./invoice/route"
-import { handle } from 'hono/vercel'
 
-const app = new Hono()
+const app = new Hono().basePath("/api")
 
 app.get("/", (c) => {
    return c.text("Hello Hono!")
