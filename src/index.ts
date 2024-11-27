@@ -1,5 +1,6 @@
 import { Hono } from "hono"
 import { invoiceRoute } from "./invoice/route"
+import { handle } from 'hono/vercel'
 
 const app = new Hono()
 
@@ -9,4 +10,4 @@ app.get("/", (c) => {
 
 app.route("/invoice", invoiceRoute)
 
-export default app
+export default handle(app)
