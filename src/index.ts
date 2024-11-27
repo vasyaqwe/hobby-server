@@ -1,13 +1,19 @@
-import { Hono } from "hono"
-import { handle } from "hono/vercel"
-import { invoiceRoute } from "./invoice/route"
+import { z } from "zod"
+import app from "./app"
 
-const app = new Hono().basePath("/api")
+const ServeEnv = z.object({
+   PORT: z
+      .string()
+      .regex(/^\d+$/, "Port must be a numeric string")
+      .default("3000")
+      .transform(Number),
+})
+const ProcessEnv = ServeEnv.parse(process.env)
 
-app.get("/", (c) => {
-   return c.text("Hello Hono!")
+const server = Bun.serve({
+   port: ProcessEnv.PORT,
+   hostname: "0.0.0.0",
+   fetch: app.fetch,
 })
 
-app.route("/invoice", invoiceRoute)
-
-export default handle(app)
+console.log("server running", server.port)
